@@ -30,29 +30,29 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId") UUID userId) {
         Optional<UserModel> userModelOptional = userService.findByid(userId);
-        if(userModelOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+        if(userModelOptional.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+
         return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable(value = "userId") UUID userId){
         Optional<UserModel> userModelOptional = userService.findByid(userId);
-        if(userModelOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+        if(userModelOptional.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+
         userService.delete(userModelOptional.get());
-        return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully");
+        return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully!");
     }
 
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable(value = "userId") UUID userId,
                                              @JsonView(UserDto.UserView.UserPut.class) UserDto userDto){
         Optional<UserModel> userModelOptional = userService.findByid(userId);
-        if(userModelOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+        if(userModelOptional.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+
         var userModel = userModelOptional.get();
         userModel.setFullName(userDto.getFullName());
         userModel.setPhoneNumber(userDto.getPhoneNumber());
@@ -60,6 +60,22 @@ public class UserController {
         userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
         userService.save(userModel);
         return ResponseEntity.status(HttpStatus.OK).body(userModel);
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<Object> updatePassword(@PathVariable(value = "userId") UUID userId,
+                                             @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto){
+        Optional<UserModel> userModelOptional = userService.findByid(userId);
+        if(userModelOptional.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        else if(!userModelOptional.get().getPassword().equals(userDto.getOldPassword()))
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Mismatched old password!");
+
+        var userModel = userModelOptional.get();
+        userModel.setPassword(userDto.getPassword());
+        userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userService.save(userModel);
+        return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
     }
 
 
