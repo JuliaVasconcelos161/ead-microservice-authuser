@@ -48,7 +48,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable(value = "userId") UUID userId,
-                                             @JsonView(UserDto.UserView.UserPut.class) UserDto userDto){
+                                             @RequestBody @JsonView(UserDto.UserView.UserPut.class) UserDto userDto){
         Optional<UserModel> userModelOptional = userService.findByid(userId);
         if(userModelOptional.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
@@ -64,7 +64,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updatePassword(@PathVariable(value = "userId") UUID userId,
-                                             @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto){
+                                                 @RequestBody @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto){
         Optional<UserModel> userModelOptional = userService.findByid(userId);
         if(userModelOptional.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
@@ -80,7 +80,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateImage(@PathVariable(value = "userId") UUID userId,
-                                                 @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto){
+                                              @RequestBody @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto){
         Optional<UserModel> userModelOptional = userService.findByid(userId);
         if(userModelOptional.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
