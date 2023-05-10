@@ -67,7 +67,7 @@ public class UserController {
                                              @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto){
         Optional<UserModel> userModelOptional = userService.findByid(userId);
         if(userModelOptional.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         else if(!userModelOptional.get().getPassword().equals(userDto.getOldPassword()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Mismatched old password!");
 
@@ -75,7 +75,21 @@ public class UserController {
         userModel.setPassword(userDto.getPassword());
         userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
         userService.save(userModel);
-        return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+        return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully!");
+    }
+
+    @PutMapping("/{userId}")
+    public ResponseEntity<Object> updateImage(@PathVariable(value = "userId") UUID userId,
+                                                 @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto){
+        Optional<UserModel> userModelOptional = userService.findByid(userId);
+        if(userModelOptional.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+
+        var userModel = userModelOptional.get();
+        userModel.setImageUrl(userDto.getImageUrl());
+        userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userService.save(userModel);
+        return ResponseEntity.status(HttpStatus.OK).body(userModel);
     }
 
 
