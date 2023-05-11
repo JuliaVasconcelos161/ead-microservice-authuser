@@ -6,6 +6,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,21 +19,24 @@ public class UserDto {
         public static interface ImagePut {}
     }
 
-    @NotBlank
+    @NotBlank(groups = UserView.RegistrationPost.class)
+    @Size(min = 4, max = 50)
     @JsonView(UserView.RegistrationPost.class)
     private String username;
 
-    @NotBlank
+    @NotBlank(groups = UserView.RegistrationPost.class)
     @Email
     @JsonView(UserView.RegistrationPost.class)
     private String email;
 
-    @NotBlank
+    @NotBlank(groups = {UserView.RegistrationPost.class, UserView.PasswordPut.class})
     @JsonView({UserView.RegistrationPost.class, UserView.PasswordPut.class})
+    @Size(min = 6, max = 20)
     private String password;
 
-    @NotBlank
+    @NotBlank(groups = UserView.PasswordPut.class)
     @JsonView(UserView.PasswordPut.class)
+    @Size(min = 6, max = 20)
     private String oldPassword;
 
     @JsonView({UserView.RegistrationPost.class,UserView.UserPut.class})
@@ -44,7 +48,7 @@ public class UserDto {
     @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
     private String cpf;
 
-    @NotBlank
+    @NotBlank(groups = UserView.ImagePut.class)
     @JsonView(UserView.ImagePut.class)
     private String imageUrl;
 }
