@@ -1,6 +1,7 @@
 package com.ead.authuser.controller;
 
 import com.ead.authuser.dto.UserDto;
+import com.ead.authuser.especification.SpecificationTemplate;
 import com.ead.authuser.model.UserModel;
 import com.ead.authuser.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -29,8 +30,9 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(
+            SpecificationTemplate.UserSpec spec,
             @PageableDefault (page = 0, size = 10, sort = "userId", direction =Sort.Direction.ASC) Pageable pageable){
-        Page<UserModel> userModelPage = userService.findAll(pageable);
+        Page<UserModel> userModelPage = userService.findAll(spec, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
     }
 
