@@ -1,13 +1,12 @@
 package com.ead.authuser.controller;
 
-import com.ead.authuser.dto.UserDto;
+import com.ead.authuser.model.dto.UserDto;
 import com.ead.authuser.enums.UserStatus;
 import com.ead.authuser.enums.UserType;
 import com.ead.authuser.model.UserModel;
 import com.ead.authuser.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,8 +20,11 @@ import java.time.ZoneId;
 @RequestMapping("/auth")
 public class AuthenticationController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+
+    public AuthenticationController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@RequestBody

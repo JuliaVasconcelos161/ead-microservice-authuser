@@ -1,11 +1,10 @@
 package com.ead.authuser.controller;
 
-import com.ead.authuser.dto.UserDto;
+import com.ead.authuser.model.dto.UserDto;
 import com.ead.authuser.especification.SpecificationTemplate;
 import com.ead.authuser.model.UserModel;
 import com.ead.authuser.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,8 +26,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @CrossOrigin(origins = "*", maxAge=3600)
 @RequestMapping("/users")
 public class UserController {
-    @Autowired
-    UserService userService;
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(
