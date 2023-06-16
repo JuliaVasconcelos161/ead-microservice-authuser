@@ -1,13 +1,12 @@
 package com.ead.authuser.controller;
 
-import com.ead.authuser.model.dto.UserDto;
 import com.ead.authuser.enums.UserStatus;
 import com.ead.authuser.enums.UserType;
 import com.ead.authuser.model.UserModel;
+import com.ead.authuser.model.dto.UserDto;
 import com.ead.authuser.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+@Log4j2
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/auth")
 public class AuthenticationController {
-
-    Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
     private final UserService userService;
 
     public AuthenticationController(UserService userService) {
@@ -49,11 +47,11 @@ public class AuthenticationController {
 
     @GetMapping("/")
     public String index() {
-        logger.trace("TRACE");
-        logger.debug("DEBUG");
-        logger.info("INFO");
-        logger.warn("WARN");
-        logger.error("ERROR");
+        log.trace("TRACE");
+        log.debug("DEBUG");
+        log.info("INFO");
+        log.warn("WARN");
+        log.error("ERROR");
         return "Logging Spring Boot... ";
     }
 
