@@ -31,10 +31,15 @@ public class AuthenticationController {
     public ResponseEntity<Object> registerUser(@RequestBody
                                                    @Validated(UserDto.UserView.RegistrationPost.class)
                                                    @JsonView(UserDto.UserView.RegistrationPost.class) UserDto userDto){
-        if(userService.existsByUsername(userDto.getUsername()))
+        log.debug("POST registerUser userDto received {}", userDto.toString());
+        if(userService.existsByUsername(userDto.getUsername())) {
+            log.warn("Username {} is already taken!", userDto.getUsername());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is already taken!");
-        if(userService.existsByEmail(userDto.getEmail()))
+        }
+        if(userService.existsByEmail(userDto.getEmail())) {
+            log.warn("Email {} is already taken!", userDto.getEmail());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is already taken!");
+        }
         var userModel = new UserModel();
         BeanUtils.copyProperties(userDto, userModel);
         userModel.setUserStatus(UserStatus.ACTIVE);
@@ -42,6 +47,8 @@ public class AuthenticationController {
         userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
         userService.save(userModel);
+        log.debug("POST registerUser userModel saved {}", userModel.toString());
+        log.info("User saved successfully userId {}", userModel.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
     }
 
