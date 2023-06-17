@@ -66,7 +66,7 @@ public class UserController {
 
         userService.delete(userModelOptional.get());
         log.debug("DELETE deleteUser userId deleted {}", userId);
-        log.info(" User deleted successfully userId {}", userId);
+        log.info("User deleted successfully userId {}", userId);
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully!");
     }
 
