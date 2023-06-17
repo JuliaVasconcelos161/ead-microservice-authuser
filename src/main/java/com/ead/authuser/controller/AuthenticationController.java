@@ -59,11 +59,6 @@ public class AuthenticationController {
         log.info("INFO");
         log.warn("WARN");
         log.error("ERROR");
-        try{
-            throw new Exception("Exception message");
-        }catch (Exception e) {
-            log.error("ERROR", e);
-        }
         return "Logging Spring Boot... ";
     }
 
