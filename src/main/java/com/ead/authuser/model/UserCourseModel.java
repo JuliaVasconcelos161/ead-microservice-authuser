@@ -19,7 +19,7 @@ public class UserCourseModel implements Serializable {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private UserModel userModel;
+    private UserModel user;
 
     @Column(nullable = false)
     private UUID courseId;

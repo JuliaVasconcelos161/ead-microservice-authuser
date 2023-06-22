@@ -23,7 +23,7 @@ public class SpecificationTemplate {
     public static Specification<UserModel> userCourseId(final UUID courseId) {
         return (root, query, cb) -> {
             query.distinct(true);
-            Join<UserModel, UserCourseModel> userProd = root.join("usersCourses");
+            Join<UserModel, UserCourseModel> userProd = root.join("userCourses");
             return cb.equal(userProd.get("courseId"), courseId);
         };
     }
