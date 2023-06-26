@@ -15,7 +15,7 @@ public class ResponsePageDto<T> extends PageImpl<T> {
                            @JsonProperty("number") int number,
                            @JsonProperty("size") int size,
                            @JsonProperty("totalElements") Long totalElements,
-                           @JsonProperty("pageable") Pageable pageable,
+                           @JsonProperty("pageable") JsonNode pageable,
                            @JsonProperty("last") boolean last,
                            @JsonProperty("totalPages") int totalPages,
                            @JsonProperty("sort")JsonNode sort,
