@@ -47,6 +47,6 @@ public class UserClient {
             log.error("Error request /courses {} ", e);
         }
         log.info("Ending request /courses userId {} ", userId);
-        return new PageImpl<>(searchResult);
+        return result.getBody();
     }
 }
