@@ -1,6 +1,7 @@
 package com.ead.authuser.controller;
 
 import com.ead.authuser.client.CourseClient;
+import com.ead.authuser.model.UserCourseModel;
 import com.ead.authuser.model.UserModel;
 import com.ead.authuser.model.dto.CourseDto;
 import com.ead.authuser.model.dto.UserCourseDto;
@@ -52,6 +53,8 @@ public class UserCourseController {
         if(userCourseService.existsByUserAndCourseId(userModelOptional.get(), userCourseDto.getCourseId()))
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: subscription already exists!");
 
-
+        UserCourseModel userCourseModel = userCourseService.save(userModelOptional.get()
+                .convertToUserCourseModel(userCourseDto.getCourseId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userCourseModel);
     }
 }
