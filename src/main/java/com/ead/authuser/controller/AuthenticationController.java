@@ -31,7 +31,7 @@ public class AuthenticationController {
     public ResponseEntity<Object> registerUser(@RequestBody
                                                    @Validated(UserDto.UserView.RegistrationPost.class)
                                                    @JsonView(UserDto.UserView.RegistrationPost.class) UserDto userDto){
-        log.debug("POST registerUser userDto received {}", userDto.toString());
+        log.debug("POST registerUser userId received {}", userDto.toString());
         if(userService.existsByUsername(userDto.getUsername())) {
             log.warn("Username {} is already taken!", userDto.getUsername());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is already taken!");
@@ -47,7 +47,7 @@ public class AuthenticationController {
         userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
         userService.save(userModel);
-        log.debug("POST registerUser userModel saved {}", userModel.toString());
+        log.debug("POST registerUser userId saved {}", userModel.getUserId());
         log.info("User saved successfully userId {}", userModel.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
     }
