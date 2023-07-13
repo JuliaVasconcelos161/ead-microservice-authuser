@@ -55,4 +55,9 @@ public class UserServiceImpl implements UserService {
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
         return userRepository.findAll(spec, pageable);
     }
+
+    @Override
+    public Optional<UserModel> findById(UUID userId) {
+        return userRepository.findById(userId);
+    }
 }
