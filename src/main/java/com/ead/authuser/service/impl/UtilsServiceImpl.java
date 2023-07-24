@@ -22,4 +22,14 @@ public class UtilsServiceImpl implements UtilsService {
         url.append(pageable.getSort().toString().replaceAll(": ", ","));
         return url.toString();
     }
+
+    @Override
+    public String createUrlDeleteUserInCourse(UUID userId) {
+        StringBuilder url =  new StringBuilder();
+        url.append("/courses/users/");
+        url.append(userId);
+        return url.toString();
+    }
+
+
 }
