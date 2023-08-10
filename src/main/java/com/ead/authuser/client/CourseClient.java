@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-
-
 import java.util.List;
 import java.util.UUID;
 @Log4j2
@@ -53,8 +51,4 @@ public class CourseClient {
         return result.getBody();
     }
 
-    public void deleteUserInCourse(UUID userId) {
-        String url = REQUEST_URL_COURSE + utilsService.createUrlDeleteUserInCourse(userId);
-        restTemplate.exchange(url, HttpMethod.DELETE, null, String.class);
-    }
 }
