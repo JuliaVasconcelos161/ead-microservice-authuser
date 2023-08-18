@@ -1,6 +1,8 @@
 package com.ead.authuser.service.impl;
 
+import com.ead.authuser.enums.ActionType;
 import com.ead.authuser.model.UserModel;
+import com.ead.authuser.publisher.UserEventPublisher;
 import com.ead.authuser.repository.UserRepository;
 import com.ead.authuser.service.UserService;
 import org.springframework.data.domain.Page;
@@ -17,8 +19,11 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    public UserServiceImpl(UserRepository userRepository) {
+
+    private final UserEventPublisher userEventPublisher;
+    public UserServiceImpl(UserRepository userRepository, UserEventPublisher userEventPublisher) {
         this.userRepository = userRepository;
+        this.userEventPublisher = userEventPublisher;
     }
 
     @Override
@@ -38,8 +43,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserModel userModel) {
-        userRepository.save(userModel);
+    public UserModel save(UserModel userModel) {
+        return userRepository.save(userModel);
     }
 
     @Override
@@ -60,5 +65,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserModel> findById(UUID userId) {
         return userRepository.findById(userId);
+    }
+
+    @Transactional
+    @Override
+    public UserModel saveUser(UserModel userModel) {
+        userModel = this.save(userModel);
+        userEventPublisher.publishUserEvent(userModel.convertToUserEventDto(), ActionType.CREATE);
+        return userModel;
     }
 }

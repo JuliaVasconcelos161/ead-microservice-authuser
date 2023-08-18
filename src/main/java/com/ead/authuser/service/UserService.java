@@ -16,7 +16,7 @@ public interface UserService {
 
     void delete(UserModel userModel);
 
-    void save(UserModel userModel);
+    UserModel save(UserModel userModel);
 
     boolean existsByUsername(String username);
 
@@ -25,4 +25,6 @@ public interface UserService {
     Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
 
     Optional<UserModel> findById(UUID userId);
+
+    UserModel saveUser(UserModel userModel);
 }
