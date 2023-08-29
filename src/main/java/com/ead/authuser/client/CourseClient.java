@@ -3,6 +3,7 @@ package com.ead.authuser.client;
 import com.ead.authuser.model.dto.CourseDto;
 import com.ead.authuser.model.dto.ResponsePageDto;
 import com.ead.authuser.service.UtilsService;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -32,6 +33,7 @@ public class CourseClient {
         this.utilsService = utilsService;
     }
 
+    @Retry(name = "retryInstance")
     public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable) {
         List<CourseDto> searchResult = null;
         ResponseEntity<ResponsePageDto<CourseDto>> result = null;
