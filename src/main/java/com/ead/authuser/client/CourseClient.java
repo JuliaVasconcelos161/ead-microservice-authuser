@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 @Log4j2
@@ -33,7 +35,7 @@ public class CourseClient {
         this.utilsService = utilsService;
     }
 
-    @Retry(name = "retryInstance")
+//    @Retry(name = "retryInstance", fallbackMethod="retryfallback")
     public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable) {
         List<CourseDto> searchResult = null;
         ResponseEntity<ResponsePageDto<CourseDto>> result = null;
@@ -53,4 +55,10 @@ public class CourseClient {
         return result.getBody();
     }
 
+    //Deve ter o mesmo retorno e mesmos parametros, além de uma excecao
+//    public Page<CourseDto> retryfallback(UUID userId, Pageable pageable, Throwable t) {
+//        log.error("Inside retry retryfallback, cause - {}", t.toString());
+//        List<CourseDto> searchResult = new ArrayList<>();
+//        return new PageImpl<>(searchResult);
+//    }
 }
