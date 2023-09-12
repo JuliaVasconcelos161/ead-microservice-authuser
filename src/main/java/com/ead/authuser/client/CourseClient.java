@@ -36,14 +36,13 @@ public class CourseClient {
     }
 
 //    @Retry(name = "retryInstance", fallbackMethod="retryfallback")
-    @CircuitBreaker(name = "circuitbreakerInstance", fallbackMethod = "circuitbreakerfallback")
+    @CircuitBreaker(name = "circuitbreakerInstance")
     public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable) {
         List<CourseDto> searchResult = null;
         ResponseEntity<ResponsePageDto<CourseDto>> result = null;
         String urlString = REQUEST_URL_COURSE + utilsService.createUrlGetAllCoursesByUser(userId, pageable);
         log.debug("Request Url: {} ", urlString);
         log.info("Request Url: {} ", urlString);
-        System.out.println("Starting");
         try{
             ParameterizedTypeReference<ResponsePageDto<CourseDto>> responseType =
                     new ParameterizedTypeReference<ResponsePageDto<CourseDto>>() {};
@@ -57,11 +56,11 @@ public class CourseClient {
         return result.getBody();
     }
 
-    public Page<CourseDto> circuitbreakerfallback(UUID userId, Pageable pageable, Throwable t) {
-        log.error("Inside circuit breaker fallback, cause - {}", t.toString());
-        List<CourseDto> searchResult = new ArrayList<>();
-        return new PageImpl<>(searchResult);
-    }
+//    public Page<CourseDto> circuitbreakerfallback(UUID userId, Pageable pageable, Throwable t) {
+//        log.error("Inside circuit breaker fallback, cause - {}", t.toString());
+//        List<CourseDto> searchResult = new ArrayList<>();
+//        return new PageImpl<>(searchResult);
+//    }
 
     //Deve ter o mesmo retorno e mesmos parametros, além de uma excecao
 //    public Page<CourseDto> retryfallback(UUID userId, Pageable pageable, Throwable t) {
