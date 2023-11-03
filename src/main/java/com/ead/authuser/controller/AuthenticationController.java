@@ -1,15 +1,19 @@
 package com.ead.authuser.controller;
 
+import com.ead.authuser.enums.RoleType;
 import com.ead.authuser.enums.UserStatus;
 import com.ead.authuser.enums.UserType;
+import com.ead.authuser.model.RoleModel;
 import com.ead.authuser.model.UserModel;
 import com.ead.authuser.model.dto.UserDto;
+import com.ead.authuser.service.RoleService;
 import com.ead.authuser.service.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,10 +25,18 @@ import java.time.ZoneId;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/auth")
 public class AuthenticationController {
+
+    private final RoleService roleService;
     private final UserService userService;
 
-    public AuthenticationController(UserService userService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthenticationController(RoleService roleService,
+                                    UserService userService,
+                                    PasswordEncoder passwordEncoder) {
+        this.roleService = roleService;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/signup")
@@ -40,12 +52,16 @@ public class AuthenticationController {
             log.warn("Email {} is already taken!", userDto.getEmail());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is already taken!");
         }
+        RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_STUDENT)
+                .orElseThrow(() -> new RuntimeException("Error: Role is Not Found."));
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         var userModel = new UserModel();
         BeanUtils.copyProperties(userDto, userModel);
         userModel.setUserStatus(UserStatus.ACTIVE);
         userModel.setUserType(UserType.STUDENT);
         userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userModel.getRoles().add(roleModel);
         userService.saveUser(userModel);
         log.debug("POST registerUser userId saved {}", userModel.getUserId());
         log.info("User saved successfully userId {}", userModel.getUserId());
