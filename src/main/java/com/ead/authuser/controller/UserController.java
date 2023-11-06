@@ -1,5 +1,6 @@
 package com.ead.authuser.controller;
 
+import com.ead.authuser.config.security.UserDetailsImpl;
 import com.ead.authuser.model.UserModel;
 import com.ead.authuser.model.dto.UserDto;
 import com.ead.authuser.service.UserService;
@@ -13,6 +14,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +39,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(
             SpecificationTemplate.UserSpec spec,
-            @PageableDefault (page = 0, size = 10, sort = "userId", direction =Sort.Direction.ASC) Pageable pageable) {
+            @PageableDefault (page = 0, size = 10, sort = "userId", direction =Sort.Direction.ASC) Pageable pageable,
+            Authentication authentication) {
+        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        log.info("Authentication username {}", userDetails.getUsername());
         Page<UserModel> userModelPage;
         userModelPage = userService.findAll(spec, pageable);
         if(!userModelPage.isEmpty()) {
