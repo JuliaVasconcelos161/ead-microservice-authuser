@@ -4,10 +4,10 @@ import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Component
@@ -19,16 +19,19 @@ public class JwtProvider {
     private int jwtExpiration;
 
     public String generateJwt(Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        final String roles = userPrincipal.getAuthorities().stream()
+                .map(role -> role.getAuthority()).collect(Collectors.joining(","));
         return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
+                .setSubject(userPrincipal.getUserId().toString())
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpiration))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
-    public String getUsernameJwt(String token) {
+    public String getSubjectJwt(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
