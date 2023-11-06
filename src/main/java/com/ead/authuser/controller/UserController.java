@@ -45,7 +45,7 @@ public class UserController {
         this.authenticationCurrentUserService = authenticationCurrentUserService;
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'STUDENT')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(
             SpecificationTemplate.UserSpec spec,
