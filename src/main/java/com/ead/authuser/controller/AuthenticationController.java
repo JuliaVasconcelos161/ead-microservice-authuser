@@ -68,7 +68,7 @@ public class AuthenticationController {
             log.warn("Email {} is already taken!", userDto.getEmail());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is already taken!");
         }
-        RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_STUDENT)
+        RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("Error: Role is Not Found."));
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         var userModel = new UserModel();

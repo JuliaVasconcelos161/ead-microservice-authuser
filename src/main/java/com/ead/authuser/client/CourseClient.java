@@ -38,7 +38,7 @@ public class CourseClient {
     }
 
 //    @Retry(name = "retryInstance", fallbackMethod="retryfallback")
-    @CircuitBreaker(name = "circuitbreakerInstance")
+    @CircuitBreaker(name = "circuitbreakerInstance", fallbackMethod = "circuitbreakerfallback")
     public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable, String token) {
         List<CourseDto> searchResult = null;
         ResponseEntity<ResponsePageDto<CourseDto>> result = null;
@@ -57,14 +57,14 @@ public class CourseClient {
         return result.getBody();
     }
 
-//    public Page<CourseDto> circuitbreakerfallback(UUID userId, Pageable pageable, Throwable t) {
-//        log.error("Inside circuit breaker fallback, cause - {}", t.toString());
-//        List<CourseDto> searchResult = new ArrayList<>();
-//        return new PageImpl<>(searchResult);
-//    }
+    public Page<CourseDto> circuitBreakerFallback(UUID userId, Pageable pageable, String token, Throwable t) {
+        log.error("Inside circuit breaker fallback, cause - {}", t.toString());
+        List<CourseDto> searchResult = new ArrayList<>();
+        return new PageImpl<>(searchResult);
+    }
 
     //Deve ter o mesmo retorno e mesmos parametros, além de uma excecao
-//    public Page<CourseDto> retryfallback(UUID userId, Pageable pageable, Throwable t) {
+//    public Page<CourseDto> retryFallback(UUID userId, Pageable pageable, Throwable t) {
 //        log.error("Inside retry retryfallback, cause - {}", t.toString());
 //        List<CourseDto> searchResult = new ArrayList<>();
 //        return new PageImpl<>(searchResult);
