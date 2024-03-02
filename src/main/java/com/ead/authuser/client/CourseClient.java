@@ -15,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -37,8 +36,8 @@ public class CourseClient {
         this.utilsService = utilsService;
     }
 
-//    @Retry(name = "retryInstance", fallbackMethod="retryfallback")
-    @CircuitBreaker(name = "circuitbreakerInstance", fallbackMethod = "circuitbreakerfallback")
+//    @Retry(name = "retryInstance", fallbackMethod="retryFallback")
+    @CircuitBreaker(name = "circuitbreakerInstance", fallbackMethod = "circuitBreakerFallback")
     public Page<CourseDto> getAllCoursesByUser(UUID userId, Pageable pageable, String token) {
         List<CourseDto> searchResult = null;
         ResponseEntity<ResponsePageDto<CourseDto>> result = null;
